@@ -1,22 +1,5 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import { authenticator, type User } from "~/services/auth.server";
-
-const sessionSecret = process.env.SESSION_SECRET || "default-secret-change-in-production";
-
-// Session Storage 생성 (Remix Auth와 공유)
-export const sessionStorage = createCookieSessionStorage<{
-  user: User;
-}>({
-  cookie: {
-    name: "__session",
-    secure: process.env.NODE_ENV === "production",
-    secrets: [sessionSecret],
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    httpOnly: true,
-  },
-});
+import { redirect } from "@remix-run/node";
+import { authenticator, sessionStorage, type User } from "~/services/auth.server";
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
 

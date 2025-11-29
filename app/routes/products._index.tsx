@@ -1,16 +1,14 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { productApi } from "~/utils/api.client.server";
-import { getToken } from "~/utils/session.server";
+import { productService } from "~/services/product.server";
 
 export const meta: MetaFunction = () => {
   return [{ title: "제품 목록" }];
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const token = await getToken(request);
-  const { products } = await productApi.getAll(token || undefined);
+  const products = await productService.getAll();
 
   return json({ products });
 }

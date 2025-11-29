@@ -1,21 +1,18 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { productApi } from "~/utils/api.client.server";
-import { getToken } from "~/utils/session.server";
+import { productService } from "~/services/product.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: data?.product.name || "제품 상세" }];
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
-  const token = await getToken(request);
-
+export async function loader({ params }: LoaderFunctionArgs) {
   if (!params.id) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const { product } = await productApi.getById(params.id, token || undefined);
+  const product = await productService.getById(params.id);
 
   if (!product) {
     throw new Response("Not Found", { status: 404 });

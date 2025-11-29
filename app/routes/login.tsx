@@ -23,8 +23,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const url = new URL(request.url);
-  const redirectTo = url.searchParams.get("redirectTo") || "/";
+  // Clone request to read formData without consuming it
+  const clonedRequest = request.clone();
+  const formData = await clonedRequest.formData();
+  const redirectTo = (formData.get("redirectTo") as string) || "/";
+
+  console.log('[Login] Redirect to:', redirectTo);
 
   try {
     return await authenticator.authenticate("user-pass", request, {
@@ -33,6 +37,13 @@ export async function action({ request }: ActionFunctionArgs) {
       throwOnError: true,
     });
   } catch (error) {
+    console.log('[Login] Error:', error);
+
+    // If it's a Response (redirect), return it
+    if (error instanceof Response) {
+      return error;
+    }
+
     if (error instanceof Error) {
       return json({ error: error.message }, { status: 400 });
     }

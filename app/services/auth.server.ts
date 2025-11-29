@@ -4,7 +4,7 @@ import { GoogleStrategy } from "remix-auth-google";
 import { GitHubStrategy } from "remix-auth-github";
 import bcrypt from "bcryptjs";
 import { prisma } from "~/lib/prisma.server";
-import { sessionStorage } from "~/utils/session.server";
+import { createCookieSessionStorage } from "@remix-run/node";
 
 export interface User {
   id: string;
@@ -12,6 +12,23 @@ export interface User {
   name: string | null;
   role: "admin" | "user";
 }
+
+const sessionSecret = process.env.SESSION_SECRET || "default-secret-change-in-production";
+
+// Session Storage 생성
+export const sessionStorage = createCookieSessionStorage<{
+  user: User;
+}>({
+  cookie: {
+    name: "__session",
+    secure: process.env.NODE_ENV === "production",
+    secrets: [sessionSecret],
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    httpOnly: true,
+  },
+});
 
 // Authenticator 인스턴스 생성
 export const authenticator = new Authenticator<User>(sessionStorage);
@@ -22,7 +39,10 @@ authenticator.use(
     const email = form.get("email") as string;
     const password = form.get("password") as string;
 
+    console.log('[Auth] Login attempt:', { email, hasPassword: !!password });
+
     if (!email || !password) {
+      console.log('[Auth] Missing credentials');
       throw new Error("이메일과 비밀번호를 입력해주세요.");
     }
 
@@ -31,8 +51,12 @@ authenticator.use(
       where: { email },
     });
 
+    console.log('[Auth] User found:', !!user);
+
     if (user) {
       const isValid = await bcrypt.compare(password, user.password);
+      console.log('[Auth] Password valid:', isValid);
+
       if (!isValid) {
         throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
       }
@@ -50,8 +74,12 @@ authenticator.use(
       where: { email },
     });
 
+    console.log('[Auth] Admin found:', !!admin);
+
     if (admin) {
       const isValid = await bcrypt.compare(password, admin.password);
+      console.log('[Auth] Admin password valid:', isValid);
+
       if (!isValid) {
         throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
       }
@@ -64,6 +92,7 @@ authenticator.use(
       };
     }
 
+    console.log('[Auth] No user or admin found');
     throw new Error("계정을 찾을 수 없습니다.");
   }),
   "user-pass"
