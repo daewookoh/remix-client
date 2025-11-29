@@ -135,17 +135,9 @@ export default function Login() {
               autoComplete="email"
               placeholder="user@example.com"
               defaultValue="a@a.com"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "2px solid #e0e0e0",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                transition: "border-color 0.2s",
-                boxSizing: "border-box"
-              }}
-              onFocus={(e) => e.target.style.borderColor = "#667eea"}
-              onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+              style={styles.input}
+              onFocus={(e) => e.currentTarget.style.borderColor = "#667eea"}
+              onBlur={(e) => e.currentTarget.style.borderColor = "#e0e0e0"}
             />
           </div>
 
@@ -161,17 +153,9 @@ export default function Login() {
               autoComplete="current-password"
               placeholder="••••••••"
               defaultValue="test123"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "2px solid #e0e0e0",
-                borderRadius: "8px",
-                fontSize: "1rem",
-                transition: "border-color 0.2s",
-                boxSizing: "border-box"
-              }}
-              onFocus={(e) => e.target.style.borderColor = "#667eea"}
-              onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+              style={styles.input}
+              onFocus={(e) => e.currentTarget.style.borderColor = "#667eea"}
+              onBlur={(e) => e.currentTarget.style.borderColor = "#e0e0e0"}
             />
           </div>
 
@@ -179,17 +163,11 @@ export default function Login() {
             type="submit"
             disabled={isSubmitting}
             style={{
-              width: "100%",
-              padding: "0.75rem",
+              ...styles.button,
               backgroundColor: isSubmitting ? "#999" : "#667eea",
               color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              fontWeight: "600",
               cursor: isSubmitting ? "not-allowed" : "pointer",
-              transition: "background-color 0.2s",
-              marginTop: "0.5rem"
+              marginTop: "0.5rem",
             }}
             onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = "#5568d3")}
             onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = "#667eea")}
@@ -228,20 +206,15 @@ export default function Login() {
                   <button
                     type="submit"
                     style={{
-                      width: "100%",
-                      padding: "0.75rem",
+                      ...styles.button,
                       backgroundColor: "white",
                       color: "#333",
                       border: "2px solid #e0e0e0",
-                      borderRadius: "8px",
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                      cursor: "pointer",
                       transition: "all 0.2s",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: "0.5rem"
+                      gap: "0.5rem",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = "#f5f5f5";
@@ -269,20 +242,14 @@ export default function Login() {
                   <button
                     type="submit"
                     style={{
-                      width: "100%",
-                      padding: "0.75rem",
+                      ...styles.button,
                       backgroundColor: "#24292e",
                       color: "white",
-                      border: "none",
-                      borderRadius: "8px",
-                      fontSize: "1rem",
-                      fontWeight: "600",
-                      cursor: "pointer",
                       transition: "background-color 0.2s",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      gap: "0.5rem"
+                      gap: "0.5rem",
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#1a1e22"}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#24292e"}

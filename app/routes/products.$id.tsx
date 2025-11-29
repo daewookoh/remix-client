@@ -7,6 +7,45 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: data?.product.name || "제품 상세" }];
 };
 
+const styles = {
+  container: {
+    padding: "2rem",
+    maxWidth: "1200px",
+    margin: "0 auto",
+  },
+  link: {
+    color: "#007bff",
+    textDecoration: "none",
+    marginBottom: "1rem",
+    display: "inline-block" as const,
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "2rem",
+    marginTop: "1rem",
+  },
+  imagePlaceholder: {
+    width: "100%",
+    height: "400px",
+    backgroundColor: "#f0f0f0",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button: {
+    marginTop: "2rem",
+    padding: "1rem 2rem",
+    backgroundColor: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "1rem",
+    cursor: "pointer",
+  },
+};
+
 export async function loader({ params }: LoaderFunctionArgs) {
   if (!params.id) {
     throw new Response("Not Found", { status: 404 });
@@ -25,20 +64,12 @@ export default function ProductDetail() {
   const { product } = useLoaderData<typeof loader>();
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <Link
-        to="/products"
-        style={{
-          color: "#007bff",
-          textDecoration: "none",
-          marginBottom: "1rem",
-          display: "inline-block",
-        }}
-      >
+    <div style={styles.container}>
+      <Link to="/products" style={styles.link}>
         ← 목록으로 돌아가기
       </Link>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "1rem" }}>
+      <div style={styles.grid}>
         <div>
           {product.images[0] ? (
             <img
@@ -47,17 +78,7 @@ export default function ProductDetail() {
               style={{ width: "100%", borderRadius: "8px" }}
             />
           ) : (
-            <div
-              style={{
-                width: "100%",
-                height: "400px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            <div style={styles.imagePlaceholder}>
               이미지 없음
             </div>
           )}
@@ -85,18 +106,7 @@ export default function ProductDetail() {
             {product.description}
           </p>
 
-          <button
-            style={{
-              marginTop: "2rem",
-              padding: "1rem 2rem",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              fontSize: "1rem",
-              cursor: "pointer",
-            }}
-          >
+          <button style={styles.button}>
             장바구니 추가
           </button>
         </div>
