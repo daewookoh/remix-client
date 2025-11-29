@@ -22,4 +22,20 @@ export default defineConfig({
       "~": path.resolve(__dirname, "./app"),
     },
   },
+  server: {
+    middlewareMode: false,
+    proxy: {},
+  },
+  // Suppress Chrome DevTools and other development-only errors
+  customLogger: {
+    ...console,
+    error: (...args) => {
+      const msg = args.join(' ');
+      // Suppress Chrome DevTools requests
+      if (msg.includes('.well-known/appspecific/com.chrome')) {
+        return;
+      }
+      console.error(...args);
+    },
+  },
 });
