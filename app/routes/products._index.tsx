@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { productService } from "~/services/product.server";
@@ -36,9 +36,8 @@ const styles = {
   },
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   const products = await productService.getAll();
-
   return json({ products });
 }
 

@@ -2,7 +2,6 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remi
 import { json } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData, useNavigation, useSearchParams } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
-import { getUser } from "~/utils/session.server";
 
 export const meta: MetaFunction = () => {
   return [{ title: "로그인" }];
@@ -54,14 +53,7 @@ const styles = {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUser(request);
-  const url = new URL(request.url);
-  const redirectTo = url.searchParams.get("redirectTo") || "/";
-
   return json({
-    user,
-    redirectTo,
-    // 소셜 로그인 활성화 여부
     googleEnabled: !!process.env.GOOGLE_CLIENT_ID,
     githubEnabled: !!process.env.GITHUB_CLIENT_ID,
   });
